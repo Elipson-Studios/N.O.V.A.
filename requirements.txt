@@ -1,0 +1,4 @@
+tensorflow
+requests
+bs4
+numpy
