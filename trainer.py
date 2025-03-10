@@ -1,9 +1,16 @@
 import sys
-import tensorflow as tf
 import requests
 from bs4 import BeautifulSoup
-import numpy as np
 import re
+import torch
+from transformers import GPT2LMHeadModel, GPT2Tokenizer
+
+# Check for GPU availability
+device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
+if device.type == "cuda":
+    print("GPU is available.")
+else:
+    print("Warning: No GPU found. The code will run on the CPU.")
 
 incentive = 50
 goal = 100
@@ -22,18 +29,9 @@ def search(query, num_results=10):
 
 class Endpoint:
     def __init__(self):
-        self.model = self.build_model()
-        self.tokenizer = tf.keras.preprocessing.text.Tokenizer(num_words=10000)
-
-    def build_model(self):
-        model = tf.keras.Sequential([
-            tf.keras.layers.Embedding(input_dim=10000, output_dim=64),
-            tf.keras.layers.LSTM(64),
-            tf.keras.layers.Dense(64, activation='relu'),
-            tf.keras.layers.Dense(1, activation='sigmoid')
-        ])
-        model.compile(optimizer='adam', loss='binary_crossentropy', metrics=['accuracy'])
-        return model
+        self.tokenizer = GPT2Tokenizer.from_pretrained("gpt2")
+        self.model = GPT2LMHeadModel.from_pretrained("gpt2").to(device)
+        self.tokenizer.pad_token_id = self.tokenizer.eos_token_id  # Ensure pad_token_id is set
 
     def preprocess_text(self, text):
         text = text.lower()
@@ -53,10 +51,20 @@ class Endpoint:
 
     def generate_response(self, input_text):
         input_text = self.preprocess_text(input_text)
-        sequences = self.tokenizer.texts_to_sequences([input_text])
-        padded_sequences = tf.keras.preprocessing.sequence.pad_sequences(sequences, maxlen=100)
-        prediction = self.model.predict(padded_sequences)
-        return f"Predicted response: {prediction[0][0]}"
+        inputs = self.tokenizer.encode(input_text, return_tensors="pt").to(device)
+        attention_mask = (inputs != self.tokenizer.pad_token_id).long().to(device)
+        outputs = self.model.generate(
+            inputs, 
+            max_length=150, 
+            num_return_sequences=1, 
+            pad_token_id=self.tokenizer.eos_token_id,
+            attention_mask=attention_mask,
+            do_sample=True,  # Enable sampling to introduce randomness
+            top_k=50,        # Consider only the top 50 tokens
+            top_p=0.95       # Use nucleus sampling with probability 0.95
+        )
+        response = self.tokenizer.decode(outputs[0], skip_special_tokens=True)
+        return response
 
 if __name__ == "__main__":
     endpoint = Endpoint()
