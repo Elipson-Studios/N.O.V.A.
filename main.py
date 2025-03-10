@@ -17,8 +17,10 @@ values = {
 """
 Function Definition
 """
+# Proper format (You can remove this so long as you remove it from values as you chose)
+
 class thing:
     def example(int):
         print(f"You chose {int}")
-
-# Make sure that you define at least two functions per class!
+    def example2(int):
+        print(f"You chose {int} again")
