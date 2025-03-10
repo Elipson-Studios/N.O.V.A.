@@ -12,7 +12,7 @@ char modules[MAX] = "Depend/interpret/ed/modules";
 int main(int argc, char *argv[]) {
     wchar_t *program = Py_DecodeLocale(argv[0], NULL);
     if (program == NULL) {
-        fprintf(stderr, "Fatal error: cannot decode argv[0]\n");
+        fprintf(stderr, "[1] Fatal error: cannot decode argv[0]\n");
         exit(1);
     }
 
@@ -38,7 +38,7 @@ int main(int argc, char *argv[]) {
         PyRun_SimpleFile(fp_modules, modules_path);
         fclose(fp_modules);
     } else {
-        fprintf(stderr, "Could not open modules: %s\n", modules_path);
+        fprintf(stderr, "[2] Could not open modules: %s\n", modules_path);
     }
 
     if (Py_FinalizeEx() < 0) {
