@@ -1,10 +1,11 @@
 import sys
 import tensorflow
+import json
 
-"""
-Configuration
-"""
-prefix = '@' # Command prefix
+with open('config.json', 'r') as config_file:
+    config = json.load(config_file)
+    prefix = config.get('prefix', '')
+
 values = { 
     'example': {
         'description': 'Example command',
@@ -14,11 +15,10 @@ values = {
 }
 
 """
-Define functionality of each value within the dictionary, use this format
+Function Definition
 """
 class thing:
     def example(int):
         print(f"You chose {int}")
 
 # Make sure that you define at least two functions per class!
-
