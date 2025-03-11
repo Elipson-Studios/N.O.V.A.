@@ -3,7 +3,9 @@ import requests
 from bs4 import BeautifulSoup
 import re
 import torch
-from transformers import GPT2LMHeadModel, GPT2Tokenizer
+import torch.nn as nn
+import torch.optim as optim
+from torch.utils.data import Dataset, DataLoader
 import json
 from heapq import nlargest
 
@@ -49,6 +51,51 @@ def summarize_text(texts, num_points=3):
     # Return the top `num_points` words
     return most_frequent
 
+class TextDataset(Dataset):
+    def __init__(self, text, seq_length):
+        self.text = text
+        self.seq_length = seq_length
+        self.chars = sorted(list(set(text)))
+        self.char_to_idx = {char: idx for idx, char in enumerate(self.chars)}
+        self.idx_to_char = {idx: char for idx, char in enumerate(self.chars)}
+        self.data = self.create_sequences()
+
+    def create_sequences(self):
+        sequences = []
+        for i in range(0, len(self.text) - self.seq_length):
+            seq = self.text[i:i + self.seq_length]
+            label = self.text[i + self.seq_length]
+            sequences.append((seq, label))
+        return sequences
+
+    def __len__(self):
+        return len(self.data)
+
+    def __getitem__(self, idx):
+        seq, label = self.data[idx]
+        seq_idx = [self.char_to_idx[char] for char in seq]
+        label_idx = self.char_to_idx[label]
+        return torch.tensor(seq_idx), torch.tensor(label_idx)
+
+class LSTMModel(nn.Module):
+    def __init__(self, vocab_size, embedding_dim, hidden_dim, num_layers):
+        super(LSTMModel, self).__init__()
+        self.embedding = nn.Embedding(vocab_size, embedding_dim)
+        self.lstm = nn.LSTM(embedding_dim, hidden_dim, num_layers, batch_first=True)
+        self.fc = nn.Linear(hidden_dim, vocab_size)
+
+    def forward(self, x, hidden):
+        x = self.embedding(x)
+        out, hidden = self.lstm(x, hidden)
+        out = self.fc(out[:, -1, :])
+        return out, hidden
+
+    def init_hidden(self, batch_size):
+        weight = next(self.parameters()).data
+        hidden = (weight.new(self.lstm.num_layers, batch_size, self.lstm.hidden_size).zero_(),
+                  weight.new(self.lstm.num_layers, batch_size, self.lstm.hidden_size).zero_())
+        return hidden
+
 class Endpoint:
     def __init__(self):
         # Load the on-site knowledge from the JSON file
@@ -56,9 +103,13 @@ class Endpoint:
         self.config = self.load_config()  # Load config to check if search is allowed
 
         # Model and tokenizer initialization
-        self.tokenizer = GPT2Tokenizer.from_pretrained("gpt2")
-        self.model = GPT2LMHeadModel.from_pretrained("gpt2").to(device)
-        self.tokenizer.pad_token_id = self.tokenizer.eos_token_id  # Set pad_token_id once in constructor
+        self.seq_length = 100
+        self.embedding_dim = 128
+        self.hidden_dim = 256
+        self.num_layers = 2
+        self.model = None
+        self.dataset = None
+        self.dataloader = None
 
     def load_knowledge_base(self):
         """Load or define the internal knowledge base from a JSON file."""
@@ -153,23 +204,42 @@ class Endpoint:
         context = " ".join(main_points)  # Combine the key points from the search results
         input_with_context = f"Query: {input_text}\nSummarized Points: {context}"
 
-        inputs = self.tokenizer.encode(input_with_context, return_tensors="pt").to(device)
-        attention_mask = (inputs != self.tokenizer.pad_token_id).long().to(device)
+        inputs = torch.tensor([self.dataset.char_to_idx[char] for char in input_with_context], dtype=torch.long).unsqueeze(0).to(device)
+        hidden = self.model.init_hidden(1)
+        output, hidden = self.model(inputs, hidden)
+        predicted_char_idx = torch.argmax(output, dim=1).item()
+        predicted_char = self.dataset.idx_to_char[predicted_char_idx]
+        return predicted_char
 
-        outputs = self.model.generate(
-            inputs, 
-            max_length=150, 
-            num_return_sequences=1, 
-            pad_token_id=self.tokenizer.eos_token_id,
-            attention_mask=attention_mask,
-            do_sample=True,  # Enable randomness for more varied responses
-            top_k=50,        # Use a smaller range for top_k
-            top_p=0.9        # Adjust nucleus sampling
-        )
+    def fine_tune_model(self, train_file, output_dir):
+        """Fine-tune the LSTM model on a custom dataset."""
+        # Load the dataset
+        with open(train_file, 'r') as f:
+            text = f.read()
+        self.dataset = TextDataset(text, self.seq_length)
+        self.dataloader = DataLoader(self.dataset, batch_size=64, shuffle=True)
 
-        response = self.tokenizer.decode(outputs[0], skip_special_tokens=True)
-        return response
+        # Initialize the model
+        self.model = LSTMModel(len(self.dataset.chars), self.embedding_dim, self.hidden_dim, self.num_layers).to(device)
+        criterion = nn.CrossEntropyLoss()
+        optimizer = optim.Adam(self.model.parameters(), lr=0.001)
+
+        # Train the model
+        self.model.train()
+        for epoch in range(10):  # Number of epochs
+            hidden = self.model.init_hidden(64)
+            for inputs, labels in self.dataloader:
+                inputs, labels = inputs.to(device), labels.to(device)
+                hidden = tuple([each.data for each in hidden])
+                self.model.zero_grad()
+                output, hidden = self.model(inputs, hidden)
+                loss = criterion(output, labels)
+                loss.backward()
+                optimizer.step()
+            print(f"Epoch {epoch + 1}, Loss: {loss.item()}")
 
 if __name__ == "__main__":
     endpoint = Endpoint()
+    # Fine-tune the model on a custom dataset
+    endpoint.fine_tune_model(train_file="Depend/json/onSiteData.json", output_dir="./fine_tuned_model")
     endpoint.interact()
