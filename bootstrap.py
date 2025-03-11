@@ -114,7 +114,7 @@ class Endpoint:
     def load_knowledge_base(self):
         """Load or define the internal knowledge base from a JSON file."""
         knowledge_base = {}
-        knowledge_file = os.path.join(os.path.dirname(__file__), 'onSiteData.json')
+        knowledge_file = os.path.join(os.path.dirname(__file__), 'Depend/json/onSiteData.json')
         
         if not os.path.exists(knowledge_file):
             print(f"Warning: {knowledge_file} does not exist.")
@@ -227,9 +227,9 @@ class Endpoint:
         # Train the model
         self.model.train()
         for epoch in range(10):  # Number of epochs
-            hidden = self.model.init_hidden(64)
             for inputs, labels in self.dataloader:
                 inputs, labels = inputs.to(device), labels.to(device)
+                hidden = self.model.init_hidden(inputs.size(0))  # Initialize hidden state with the correct batch size
                 hidden = tuple([each.data for each in hidden])
                 self.model.zero_grad()
                 output, hidden = self.model(inputs, hidden)
