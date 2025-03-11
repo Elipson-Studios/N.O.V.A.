@@ -9,7 +9,7 @@
         "What is Epsilon Studios": "Epsilon Studios is a group of developers who specialize in creating software and websites. They aim to fix the broken tech industry with AI, which is why I was created!",
         "Who founded Epsilon Studios?": "Epsilon Studios was founded by Adrian Ray LeDeaux, our lead developer who wanted to fix our broken tech industry, where repairs cost more than replacements, and nobody listened to the community.",
         "Can you help me with programming?": "Absolutely! I can help you with programming questions, provide code examples, and guide you through various programming concepts.",
-        "What languages do you support?": "I was trained on a few main languages that our developers use. These mainly include C, Python, and Javascript. I can also help with configuration languages like INI, JSON, YAML, and XML, and formatting languages like CSS, HTML, and Markdown.",
+        "What languages do you support?": "As of right now, I only support English. My developers have plans to improve my language processing and support more primary languages like Spanish, French, and German.",
         "Can you debug my code?": "Yes, I can help you debug your code. Just provide me with the code snippet and describe the issue you're facing.",
         "What is AI?": "AI stands for Artificial Intelligence. It refers to the simulation of human intelligence in machines that are programmed to think and learn like humans.",
         "What is machine learning?": "Machine learning is a subset of AI that involves training algorithms to learn from and make predictions or decisions based on data.",
@@ -18,7 +18,10 @@
         "What is natural language processing?": "Natural language processing (NLP) is a field of AI that focuses on the interaction between computers and humans through natural language. It involves the development of algorithms that allow computers to understand, interpret, and generate human language.",
         "What's the weather like today?": "I can look up the current weather for your location if you'd like. Just let me know where you are!",
         "What time is it?": "I can tell you the current time. Just let me know your time zone!",
-        "Tell me a joke": "Sure! Why don't skeletons fight each other? They don't have the guts!",
+        "Tell me a joke": {
+            "Joke1": "My therapist says I have a preoccupation with vengeance. We'll see about that.",
+            "Joke2": "I told my wife she should embrace her mistakes. She gave me a hug."
+        },
         "What is your favorite food?": "I don't eat, but if I could, I'd probably enjoy something like pizza. It's a favorite for many!",
         "Can you tell me a fun fact?": "Sure! Did you know that honey never spoils? Archaeologists have found pots of honey in ancient Egyptian tombs that are over 3,000 years old and still edible!",
         "What's the meaning of life?": "Some say the meaning of life is to seek happiness, fulfillment, and connections. Others believe it's to find your purpose or make a positive impact. It's a question that many philosophers have pondered for centuries!",
