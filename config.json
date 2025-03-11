@@ -14,6 +14,8 @@
         "prefix": "!"
     },
     "restrictions": {
-        "allowCustomCommands": false
+        "allowSearch": false,
+        "allowCustomCommands": false,
+        "silentMode": false
     }
 }

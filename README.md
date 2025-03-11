@@ -25,6 +25,9 @@ Example `config.json` entry:
   "caller": "["
 }
 ```
+>[!TIP]
+>If the provided onsite data is not enough, you are always allowed to feed it more data.
+>You are also able to disable the search queries feature at any time, if your OK with having a larger payload.
 
 ## Ensuring Scalability
 To maintain scalability and simplicity:

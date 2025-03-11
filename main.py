@@ -18,7 +18,9 @@ values = {
 Function Definition
 """
 # Proper format (You can remove this so long as you remove it from values as you chose)
-
+class data:
+    def retrive(input):
+        print(f"Retriving {input}")
 class thing:
     def example(int):
         print(f"You chose {int}")
