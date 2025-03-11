@@ -211,7 +211,7 @@ class Endpoint:
         predicted_char = self.dataset.idx_to_char[predicted_char_idx]
         return predicted_char
 
-    def fine_tune_model(self, train_file, output_dir):
+    def fine_tune_model(self, train_file):
         """Fine-tune the LSTM model on a custom dataset."""
         # Load the dataset
         with open(train_file, 'r') as f:
@@ -241,5 +241,5 @@ class Endpoint:
 if __name__ == "__main__":
     endpoint = Endpoint()
     # Fine-tune the model on a custom dataset
-    endpoint.fine_tune_model(train_file="Depend/json/onSiteData.json", output_dir="./fine_tuned_model")
+    endpoint.fine_tune_model(train_file="Depend/json/onSiteData.json")
     endpoint.interact()
