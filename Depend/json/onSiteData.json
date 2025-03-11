@@ -20,10 +20,26 @@
         "What time is it?": "I can tell you the current time. Just let me know your time zone!",
         "Tell me a joke": {
             "Joke1": "My therapist says I have a preoccupation with vengeance. We'll see about that.",
-            "Joke2": "I told my wife she should embrace her mistakes. She gave me a hug."
+            "Joke2": "I told my wife she should embrace her mistakes. She gave me a hug.",
+            "Joke3": "I told myself I'd stop drinking. but I'm not about to listen to a drunk man who talks to himself.",
+            "Joke4": "I finally realized that its called a \"cell\" phone because people are prisoners of them."
         },
         "What is your favorite food?": "I don't eat, but if I could, I'd probably enjoy something like pizza. It's a favorite for many!",
-        "Can you tell me a fun fact?": "Sure! Did you know that honey never spoils? Archaeologists have found pots of honey in ancient Egyptian tombs that are over 3,000 years old and still edible!",
+        "Can you tell me a fun fact?": {
+        "fact1": "Sure! Did you know that honey never spoils? Archaeologists have found pots of honey in ancient Egyptian tombs that are over 3,000 years old and still edible!",
+        "fact2": "Sure! Did you know that the shortest war in history lasted only 38 minutes? It was between Britain and Zanzibar on August 27, 1896.",
+        "fact3": "Sure! Did you know that the Eiffel Tower can be 15 cm taller during the summer? Due to the expansion of the iron structure in the heat.",
+        "fact4": "Sure! Did you know that the first oranges weren't orange? The original oranges from Southeast Asia were a tangerine-pomelo hybrid, and they were actually green.",
+        "fact5": "Sure! Did you know that the unicorn is the national animal of Scotland? It was believed to be the natural enemy of the lion, a symbol that the English royals adopted around a hundred years ago.",
+        "fact6": "Sure! Did you know that the longest time between two twins being born is 87 days? Maria Jones-Elliot was born on June 1, 2012, and her brother, Amy, was born on August 27.",
+        "fact7": "Sure! Did you know that the world's largest snowflake was 15 inches wide and 8 inches thick? It fell in Fort Keogh, Montana, in 1887.",
+        "fact8": "Sure! Did you know that the world's largest pyramid isn't in Egypt? The Great Pyramid of Cholula is the largest pyramid by volume in the world, and it's located in Mexico.",
+        "fact9": "Sure! Did you know that the world's largest desert isn't the Sahara? Antarctica is the largest desert on Earth, covering an area of about 5.5 million square miles.",
+        "fact10": "Sure! Did you know that the world's largest island-in-a-lake-on-an-island is in Canada? Victoria Island in Canada is the world's largest island-in-a-lake-on-an-island.",
+        "fact11": "Sure! Did you know that the world's largest ocean is the Pacific Ocean? It covers an area of about 63.8 million square miles and is larger than all of Earth's land area combined.",
+        "fact12": "Sure! Did you know that the world's largest volcano is in Hawaii? Mauna Loa in Hawaii is the world's largest volcano by volume and area.",
+        "fact13": "Sure! Did you know that the world's smallest mammal is the bumblebee bat? It weighs less than a penny and has a wingspan of about 6 inches."
+    },
         "What's the meaning of life?": "Some say the meaning of life is to seek happiness, fulfillment, and connections. Others believe it's to find your purpose or make a positive impact. It's a question that many philosophers have pondered for centuries!",
         "How do I make a paper airplane?": "To make a paper airplane, start by folding a sheet of paper in half lengthwise, then unfold it and fold the two top corners to the center. Fold the resulting triangle down, and then fold the sides in to make the wings. Finally, fold the wings down and you're ready to fly!"
     },
